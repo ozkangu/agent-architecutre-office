@@ -1,0 +1,16 @@
+# Mimari Ofis Simülatörü - Gereksinimler
+
+# AutoGen Framework - Multi-agent orchestration
+pyautogen>=0.2.0
+
+# OpenAI API
+openai>=1.0.0
+
+# YAML dosya desteği
+pyyaml>=6.0
+
+# Veri işleme
+python-dotenv>=1.0.0
+
+# Opsiyonel: Gelişmiş logging
+colorlog>=6.7.0

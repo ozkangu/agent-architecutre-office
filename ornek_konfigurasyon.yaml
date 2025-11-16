@@ -1,0 +1,65 @@
+# Mimari Ofis Konfigurasyon Dosyası
+# Bu dosya mimari ofis simülasyonu için örnek bir konfigurasyon sunar
+
+proje_adi: "Akilli_Sehir_Kompleksi"
+max_tur: 20
+otomatik_mod: true
+loglama: true
+cikti_formati: "markdown"  # markdown, json, txt
+
+ajanlar:
+  - tip: "proje_yoneticisi"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.5
+    max_tokens: 2000
+    ozel_talimatlar: "Sürdürülebilirlik hedeflerini öne çıkar ve ekip koordinasyonunu güçlü tut"
+
+  - tip: "bas_tasarimci"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.8
+    max_tokens: 2000
+    ozel_talimatlar: "Parametrik tasarım yaklaşımlarını kullan ve inovatif formlar öner"
+
+  - tip: "surdurulebilirlik"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.6
+    max_tokens: 2000
+    ozel_talimatlar: "Net-zero enerji hedefine odaklan, LEED Platinum sertifikası hedefle"
+
+  - tip: "bim_uzmani"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.5
+    max_tokens: 2000
+    ozel_talimatlar: "Revit ve Dynamo entegrasyonunu düşün, parametrik modelleme öner"
+
+  - tip: "teknik_mimar"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.6
+    max_tokens: 2000
+    ozel_talimatlar: "Yenilikçi yapısal çözümler öner ve yapı fiziğini optimize et"
+
+  - tip: "butce_uzmani"
+    aktif: false  # Bu ajan şu an devre dışı
+    model: "gpt-4-turbo-preview"
+    temperature: 0.5
+    max_tokens: 2000
+    ozel_talimatlar: ""
+
+  - tip: "peyzaj_mimari"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.7
+    max_tokens: 2000
+    ozel_talimatlar: "Yeşil altyapı ve biyofilik tasarım prensiplerini uygula"
+
+  - tip: "ux_tasarimci"
+    aktif: true
+    model: "gpt-4-turbo-preview"
+    temperature: 0.7
+    max_tokens: 2000
+    ozel_talimatlar: "Kapsayıcı tasarım ve evrensel erişilebilirlik standartlarına önem ver"
