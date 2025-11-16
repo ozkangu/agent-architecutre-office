@@ -36,6 +36,37 @@ class CustomMessageListener:
             'content': message.get('content', '') if isinstance(message, dict) else str(message)
         })
 
+# OpenRouter Modelleri (Popüler seçenekler)
+OPENROUTER_MODELS = [
+    # Anthropic Claude
+    "anthropic/claude-3.5-sonnet",
+    "anthropic/claude-3-opus",
+    "anthropic/claude-3-sonnet",
+    "anthropic/claude-3-haiku",
+
+    # OpenAI GPT
+    "openai/gpt-4-turbo-preview",
+    "openai/gpt-4",
+    "openai/gpt-3.5-turbo",
+
+    # Google
+    "google/gemini-pro-1.5",
+    "google/gemini-pro",
+
+    # Meta Llama
+    "meta-llama/llama-3-70b-instruct",
+    "meta-llama/llama-3-8b-instruct",
+
+    # Mistral
+    "mistralai/mistral-large",
+    "mistralai/mistral-medium",
+    "mistralai/mixtral-8x7b-instruct",
+
+    # Others
+    "perplexity/llama-3-sonar-large-32k-chat",
+    "qwen/qwen-2-72b-instruct",
+]
+
 # Agent bilgileri ve açıklamaları
 AJAN_ACIKLAMALARI = {
     AjanTipi.PROJE_YONETICISI: "Koordinasyon, dokümantasyon ve takım yönetimi",
@@ -86,15 +117,10 @@ def create_agent_config_ui():
                         )
 
                         model = gr.Dropdown(
-                            choices=[
-                                "gpt-4-turbo-preview",
-                                "gpt-4",
-                                "gpt-3.5-turbo",
-                                "claude-3-opus-20240229",
-                                "claude-3-sonnet-20240229"
-                            ],
-                            value="gpt-4-turbo-preview",
-                            label="Model"
+                            choices=OPENROUTER_MODELS,
+                            value="anthropic/claude-3.5-sonnet",
+                            label="Model (OpenRouter)",
+                            info="OpenRouter üzerinden erişilebilen tüm modeller"
                         )
 
                         ozel_talimatlar = gr.Textbox(
@@ -250,10 +276,18 @@ def create_main_ui():
                             value="Yeni_Proje"
                         )
 
+                        api_provider_input = gr.Radio(
+                            choices=["openrouter", "openai"],
+                            value="openrouter",
+                            label="API Provider",
+                            info="OpenRouter: Çoklu model erişimi (önerilen)"
+                        )
+
                         api_key_input = gr.Textbox(
-                            label="OpenAI API Key",
-                            placeholder="sk-...",
-                            type="password"
+                            label="API Key",
+                            placeholder="OpenRouter: sk-or-... | OpenAI: sk-...",
+                            type="password",
+                            info="OpenRouter key: https://openrouter.ai/keys"
                         )
 
                         max_tur_input = gr.Slider(
@@ -356,7 +390,7 @@ KONUM: İstanbul, Beşiktaş
             return configs
 
         def start_simulation_wrapper(
-            proje_adi, proje_briefi, max_tur, api_key, cikti_format, *agent_values
+            proje_adi, api_provider, api_key, proje_briefi, max_tur, cikti_format, *agent_values
         ):
             """Simülasyonu başlat (wrapper)"""
 
@@ -387,7 +421,8 @@ KONUM: İstanbul, Beşiktaş
                             aktif=True,
                             temperature=temperature,
                             model=model,
-                            ozel_talimatlar=ozel_talimatlar or ""
+                            ozel_talimatlar=ozel_talimatlar or "",
+                            api_provider=api_provider
                         ))
                         aktif_agent_isimleri.append(
                             ajan_tipi.value.replace('_', ' ').title()
@@ -403,6 +438,7 @@ KONUM: İstanbul, Beşiktaş
                 max_tur=int(max_tur),
                 otomatik_mod=True,
                 api_key=api_key,
+                api_provider=api_provider,
                 loglama=True,
                 cikti_formati=cikti_format
             )
@@ -454,9 +490,10 @@ KONUM: İstanbul, Beşiktaş
             fn=start_simulation_wrapper,
             inputs=[
                 proje_adi_input,
+                api_provider_input,
+                api_key_input,
                 proje_briefi_input,
                 max_tur_input,
-                api_key_input,
                 cikti_format_input
             ] + agent_inputs,
             outputs=[
