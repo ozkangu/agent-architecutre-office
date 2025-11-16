@@ -8,8 +8,10 @@ Mimari tasarım ofislerinde sözel ve düşünsel yükü azaltmak, farklı konul
 
 ## ✨ Özellikler
 
+- **🖥️ Modern Web UI** (Gradio tabanlı interaktif arayüz)
 - **15+ farklı uzman ajan tipi** (Proje Yöneticisi, Baş Tasarımcı, Sürdürülebilirlik Danışmanı, vb.)
 - **Tam özelleştirilebilir konfigürasyon** (model, temperature, özel talimatlar)
+- **Real-time konuşma takibi** (Agent'ların tartışmalarını canlı izleyin)
 - **YAML/JSON konfig dosyası desteği**
 - **İnteraktif ve programatik kullanım**
 - **Hazır şablonlar** (Minimal, Sürdürülebilir, Tam Ekip)
@@ -34,7 +36,42 @@ pip install -r requirements.txt
 
 ## 💡 Kullanım
 
-### 1. İnteraktif Mod
+### 1. 🖥️ Web UI (Önerilen)
+
+Modern, kullanıcı dostu web arayüzü ile:
+
+```bash
+python ui_app.py
+```
+
+Tarayıcınızda otomatik olarak açılacak arayüzde:
+
+**📋 Proje Ayarları Sekmesi:**
+- Proje adı ve API key girin
+- Detaylı proje briefi oluşturun
+- Hazır şablonları yükleyin
+
+**👥 Agent Seçimi Sekmesi:**
+- İstediğiniz agent'ları seçin (checkbox ile)
+- Her agent için özel ayarlar yapın:
+  - Temperature (yaratıcılık seviyesi)
+  - Model seçimi (GPT-4, GPT-3.5, Claude vb.)
+  - Özel talimatlar
+
+**➕ Özel Agent Sekmesi:**
+- Kendi özel agent'larınızı oluşturun
+- Özel rol tanımları yapın
+
+**🚀 Simülasyon Sekmesi:**
+- Toplantıyı başlatın
+- Agent'ların konuşmalarını canlı takip edin
+- Toplantı notlarını indirin
+
+**Erişim:**
+- Yerel: http://localhost:7860
+- Ağ: http://0.0.0.0:7860
+
+### 2. İnteraktif Terminal Modu
 
 ```bash
 python mimari_ofis.py
@@ -45,7 +82,7 @@ Menüden seçim yaparak:
 2. Özel ofis oluşturabilirsiniz
 3. Konfigurasyon dosyasından yükleyebilirsiniz
 
-### 2. Örnek Konfigurasyon Oluşturma
+### 3. Örnek Konfigurasyon Oluşturma
 
 ```bash
 python mimari_ofis.py --ornek
@@ -53,7 +90,7 @@ python mimari_ofis.py --ornek
 
 Bu komut `ornek_konfigurasyon.yaml` dosyası oluşturur.
 
-### 3. Programatik Kullanım
+### 4. Programatik Kullanım
 
 ```python
 from mimari_ofis import (
@@ -99,13 +136,25 @@ HEDEF: İkonik, sürdürülebilir, toplumla iç içe
 simulator.toplanti_baslat(proje_briefi)
 ```
 
-### 4. Konfigurasyon Dosyası ile Kullanım
+### 5. Konfigurasyon Dosyası ile Kullanım
 
 ```bash
 python mimari_ofis.py
 # Menüden "3. Konfigurasyon Dosyasından Yükle" seçin
 # ornek_konfigurasyon.yaml dosya yolunu girin
 ```
+
+## 🖼️ Web UI Ekran Görüntüleri
+
+Web arayüzü şu özellikleri sunar:
+
+- ✅ Checkbox ile kolay agent seçimi
+- 🎚️ Her agent için slider ile temperature ayarı
+- 📝 Özel talimat alanları
+- 💬 Canlı chat görünümü
+- 📥 Tek tık ile toplantı notlarını indirme
+- 🎨 Hazır şablon yükleme
+- ➕ Özel agent oluşturma
 
 ## 🧑‍💼 Mevcut Ajan Tipleri
 
