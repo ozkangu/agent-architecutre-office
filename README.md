@@ -174,6 +174,38 @@ Web arayüzü şu özellikleri sunar:
 14. **Malzeme Uzmanı** - İnovatif malzemeler, performans
 15. **Kentsel Plancı** - Urban context, kamusal alan
 
+## 🤖 Desteklenen AI Modelleri (OpenRouter)
+
+**Anthropic Claude:**
+- `anthropic/claude-3.5-sonnet` ⭐ (Önerilen - En güçlü)
+- `anthropic/claude-3-opus`
+- `anthropic/claude-3-sonnet`
+- `anthropic/claude-3-haiku`
+
+**OpenAI GPT:**
+- `openai/gpt-4-turbo-preview`
+- `openai/gpt-4`
+- `openai/gpt-3.5-turbo`
+
+**Google:**
+- `google/gemini-pro-1.5`
+- `google/gemini-pro`
+
+**Meta Llama:**
+- `meta-llama/llama-3-70b-instruct`
+- `meta-llama/llama-3-8b-instruct`
+
+**Mistral AI:**
+- `mistralai/mistral-large`
+- `mistralai/mistral-medium`
+- `mistralai/mixtral-8x7b-instruct`
+
+**Diğer:**
+- `perplexity/llama-3-sonar-large-32k-chat`
+- `qwen/qwen-2-72b-instruct`
+
+> Her model farklı fiyatlandırma ve özelliklere sahiptir. Detaylar için: https://openrouter.ai/models
+
 ## 📂 Çıktı Formatları
 
 Toplantı notları otomatik olarak `cikti/` klasörüne kaydedilir:
@@ -230,20 +262,62 @@ ajanlar:
 
 ## 🔐 API Key Yönetimi
 
-API Key'inizi güvenli tutmak için `.env` dosyası kullanabilirsiniz:
+### OpenRouter (Önerilen) 🌟
+
+OpenRouter, tek bir API üzerinden Claude, GPT-4, Llama, Mistral ve daha fazlasına erişim sağlar:
+
+**Avantajlar:**
+- ✅ 100+ model tek API'den
+- ✅ Anthropic Claude modelleri (3.5 Sonnet, Opus, vb.)
+- ✅ OpenAI GPT modelleri
+- ✅ Google Gemini, Meta Llama, Mistral AI
+- ✅ Esnek fiyatlandırma
+- ✅ Otomatik fallback
+
+**API Key Alma:**
+1. https://openrouter.ai adresine gidin
+2. Hesap oluşturun
+3. https://openrouter.ai/keys adresinden API key alın
+4. Key formatı: `sk-or-v1-...`
+
+### OpenAI
+
+Sadece OpenAI modellerini kullanmak için:
+1. https://platform.openai.com/api-keys adresine gidin
+2. API key oluşturun
+
+### .env Dosyası Konfigürasyonu
+
+API Key'inizi güvenli tutmak için `.env` dosyası kullanın:
 
 ```bash
-# .env dosyası oluştur
-echo "OPENAI_API_KEY=your-api-key-here" > .env
+# .env.example dosyasını kopyalayın
+cp .env.example .env
+
+# .env dosyasını düzenleyin
+nano .env
 ```
 
+```.env
+# OpenRouter API Key (Önerilen)
+OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxxx
+
+# API Provider seçimi
+API_PROVIDER=openrouter
+
+# Varsayılan model
+DEFAULT_MODEL=anthropic/claude-3.5-sonnet
+```
+
+**Python kodunda kullanım:**
+
 ```python
-# Python kodunuzda
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
+api_key = os.getenv("OPENROUTER_API_KEY")
+api_provider = os.getenv("API_PROVIDER", "openrouter")
 ```
 
 ## 📝 Örnek Kullanım Senaryoları

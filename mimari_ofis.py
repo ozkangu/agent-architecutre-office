@@ -43,6 +43,7 @@ class AjanKonfigurasyonu:
     temperature: float = 0.7
     max_tokens: int = 2000
     ozel_talimatlar: str = ""
+    api_provider: str = "openrouter"  # openrouter, openai, azure
 
 @dataclass
 class OfisKonfigurasyonu:
@@ -52,6 +53,7 @@ class OfisKonfigurasyonu:
     max_tur: int = 20
     otomatik_mod: bool = True
     api_key: str = ""
+    api_provider: str = "openrouter"  # openrouter, openai, azure
     loglama: bool = True
     cikti_formati: str = "markdown"  # markdown, json, txt
 
@@ -230,18 +232,32 @@ class AjanFabrikasi:
     }
 
     @classmethod
-    def ajan_olustur(cls, konfig: AjanKonfigurasyonu, api_key: str) -> autogen.AssistantAgent:
+    def ajan_olustur(cls, konfig: AjanKonfigurasyonu, api_key: str, api_provider: str = "openrouter") -> autogen.AssistantAgent:
         """Konfigurasyon bazlı ajan oluştur"""
 
         sablon = cls.AJAN_SABLONLARI.get(konfig.tip)
         if not sablon:
             raise ValueError(f"Bilinmeyen ajan tipi: {konfig.tip}")
 
+        # API provider'a göre base URL ayarla
+        base_urls = {
+            "openrouter": "https://openrouter.ai/api/v1",
+            "openai": "https://api.openai.com/v1",
+            "azure": None  # Azure için farklı konfigürasyon gerekli
+        }
+
+        config_item = {
+            'model': konfig.model,
+            'api_key': api_key,
+        }
+
+        # OpenRouter veya custom endpoint kullanıyorsak base_url ekle
+        provider = konfig.api_provider if hasattr(konfig, 'api_provider') else api_provider
+        if provider in base_urls and base_urls[provider]:
+            config_item['base_url'] = base_urls[provider]
+
         llm_config = {
-            "config_list": [{
-                'model': konfig.model,
-                'api_key': api_key,
-            }],
+            "config_list": [config_item],
             "temperature": konfig.temperature,
             "max_tokens": konfig.max_tokens,
         }
@@ -269,13 +285,18 @@ class MimariOfisSimulatoru:
     def ofis_kur(self):
         """Ofisteki ajanları oluştur"""
         print("🏗️  Mimari ofis kuruluyor...")
+        print(f"📡 API Provider: {self.konfig.api_provider}")
 
         for ajan_konfig in self.konfig.ajanlar:
             if ajan_konfig.aktif:
                 try:
-                    ajan = AjanFabrikasi.ajan_olustur(ajan_konfig, self.konfig.api_key)
+                    ajan = AjanFabrikasi.ajan_olustur(
+                        ajan_konfig,
+                        self.konfig.api_key,
+                        self.konfig.api_provider
+                    )
                     self.ajanlar.append(ajan)
-                    print(f"✅ {ajan_konfig.tip.value} eklendi")
+                    print(f"✅ {ajan_konfig.tip.value} eklendi (model: {ajan_konfig.model})")
                 except Exception as e:
                     print(f"❌ {ajan_konfig.tip.value} eklenemedi: {e}")
 
@@ -304,11 +325,19 @@ class MimariOfisSimulatoru:
         )
 
         # LLM config for manager
+        manager_config_item = {
+            'model': 'gpt-4-turbo-preview',
+            'api_key': self.konfig.api_key,
+        }
+
+        # API provider'a göre base_url ekle
+        if self.konfig.api_provider == "openrouter":
+            manager_config_item['base_url'] = 'https://openrouter.ai/api/v1'
+        elif self.konfig.api_provider == "openai":
+            manager_config_item['base_url'] = 'https://api.openai.com/v1'
+
         manager_llm_config = {
-            "config_list": [{
-                'model': 'gpt-4-turbo-preview',
-                'api_key': self.konfig.api_key,
-            }],
+            "config_list": [manager_config_item],
             "temperature": 0.5,
         }
 
@@ -413,6 +442,7 @@ class OfisTemplates:
             max_tur=10,
             otomatik_mod=True,
             api_key="",
+            api_provider="openrouter",
             loglama=True,
             cikti_formati="markdown"
         )
@@ -432,6 +462,7 @@ class OfisTemplates:
             max_tur=15,
             otomatik_mod=True,
             api_key="",
+            api_provider="openrouter",
             loglama=True,
             cikti_formati="markdown"
         )
@@ -455,6 +486,7 @@ class OfisTemplates:
             max_tur=25,
             otomatik_mod=True,
             api_key="",
+            api_provider="openrouter",
             loglama=True,
             cikti_formati="markdown"
         )
